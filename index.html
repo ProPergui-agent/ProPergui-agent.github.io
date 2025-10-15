@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProPerGUI: Benchmarking Proactive and Personalized GUI Agents</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/icon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+    mjx-container[jax="CHTML"][display="true"] {
+      font-size: 95% !important;  /* 块级公式整体缩小 */
+    }
+    mjx-container[jax="CHTML"] {
+      font-size: 90% !important;  /* 行内公式更小一点 */
+      font-weight: normal !important; /* 去掉加粗 */
+    }
+  </style>
+
+
+  <script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    }
+  };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero" style="margin-top:2em; padding-top:0; padding-bottom:2em;">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">ProPerGUI: Benchmarking Proactive and Personalized GUI Agents</h1>
+          <p style="font-size:1.5em; color:#444; font-weight:500; margin-top:-0.3em;">
+            WWW 2026 Anonymous Submission
+          </p>
+
+          <!-- <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              
+              <span class="link-block">
+                <a href="https://github.com/google/nerfies"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              
+              <span class="link-block">
+                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div> -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/teaser.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
+        free-viewpoint
+        portraits.
+      </h2>
+    </div>
+  </div>
+</section> -->
+
+<section class="section" style="margin-top:-3em; padding-top:0; padding-bottom:2em;">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          Graphical User Interface (GUI) agents have emerged as a prominent research topic, attracting widespread attention.
+          However, current research is largely confined to a reactive paradigm and often neglects user personalization, which fundamentally constrains the real-world utility of these agents.
+          To address these limitations, we introduce a high-quality benchmark, ProPerGUI, for <b>Proactive and Personalized GUI agents</b>, spanning diverse platforms and application domains.
+          We formulate this challenge through two core subtasks: <b>Proactive Preference-Aware Intention Interpreting</b> and <b>Preference-Conditioned Execution</b>, supported by a novel, unified evaluation framework.
+          Comprehensive experiments across leading MLLMs and GUI Agents demonstrate that our benchmark poses substantial challenges, revealing significant limitations in proactive reasoning and preference alignment.
+          Moreover, fine-tuning considerably can enhance the model's ability to understand user intentions and preferences.
+          This work establishes a solid research foundation for proactive and personalized GUI agents, facilitating the development of the next generation of human-aligned GUI agents.
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+<!-- ====== Figure: Framework Overview ====== -->
+<div style="text-align:center; margin-top:2em; margin-bottom:2em;">
+  <img src="figures/1.png"
+       alt="Framework Overview"
+       style="width:80%; max-width:900px;">
+  <p style="font-size:0.9em; color:#666; margin-top:0.5em;">
+    <strong>Figure 1.</strong> Overview of the two-stage framework for proactive and preference-aware GUI agents. 
+  </p>
+</div>
+
+
+<section id="framework" class="section" style="margin-top:-0.5em; padding-top:0; padding-bottom:2em;">
+  <div class="container is-max-desktop">
+    <div class="content">
+
+
+      <h2 class="title is-3" style="text-align:center; margin-top:-10px; font-size:1.8em;">
+      Task Definition
+      </h2>
+
+      <!-- ====== Overall Description ====== -->
+      <div class="content has-text-justified">
+        We design the task with two consecutive subtasks, as shown in <strong>Figure&nbsp;1</strong>. To rigorously evaluate proactive and preference-aware GUI agents, we introduce a two-stage framework corresponding to these two complementary subtasks.
+        The first, <strong>Proactive Preference-Aware Intention Interpreting</strong>, focuses on inferring user intentions, operational preferences, and the need for proactive assistance from historical interactions.
+        The second, <strong>Preference-Conditioned Execution</strong>, evaluates whether the agent can generate executable actions aligned with the inferred intentions and preferences under the current GUI state.
+        This design captures the dual requirements of proactive agents: first, understanding <em>what</em> the user aims to do and <em>how</em> they prefer to operate, then translating that understanding into concrete actions.
+        By decoupling reasoning from execution, the framework supports fine-grained evaluation of both cognitive modeling and operational performance.
+      </div>
+
+      <!-- ====== Subtask I ====== -->
+      <h3 style="margin-top:1.5em; text-align:left;">
+        <strong>Subtask I: Proactive Preference-Aware Intention Interpreting.</strong>
+      </h3>
+
+      <div class="content has-text-justified">
+        The agent receives a historical interaction sequence $\mathcal{H} = \{(a_t, s_t)\}_{t=1}^{T}$, 
+        where $a_t$ denotes a user action (e.g., click, type) and $s_t$ the corresponding contextual information. 
+        The agent then generates a structured output $\hat{X} = \{\hat{I}, \hat{P}, \hat{D}\}$, which contains three key elements: Task Intention ($\hat{I}$), 
+        describing the user-agnostic goal the user is pursuing; User Preference ($\hat{P}$), describing behavioral tendencies or interaction styles (e.g., shortcut usage); and Proactive-Help Decision ($\hat{D}\in\{0,1\}$),
+        a binary indicator of whether the agent should proactively assist. This subtask focuses purely on semantic and cognitive understanding of user behavior, forming the foundation for subsequent action generation in Subtask II.
+      </div>
+
+      <!-- ====== Subtask II ====== -->
+      <h3 style="margin-top:1.5em; text-align:left;">
+        <strong>Subtask II: Preference-Conditioned Execution.</strong>
+      </h3>
+
+      <div class="content has-text-justified">
+        This subtask evaluates whether the agent can effectively translate inferred cognitive understanding—captured through $(\hat{I},\hat{P})$—into precise and executable GUI actions. Specifically, 
+        given the same inferred intention and preference representation and the current GUI state $s_{T+1}$, 
+        the agent must produce the executable sequence $\hat{A}=\{\hat{a}_1,\hat{a}_2,\ldots,\hat{a}_K\}$ that both completes the task and remains aligned with the user’s operational preferences, 
+        ensuring consistency between reasoning and execution.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dataset" class="section" style="margin-top:-0.5em; padding-top:0; padding-bottom:2em;">
+  <div class="container is-max-desktop">
+    <div class="content has-text-justified">
+
+      <h2 class="title is-3 has-text-centered" style="margin-bottom:1em;">
+        Dataset Overview and Statistical Analysis
+      </h2>
+
+      <p>
+        As shown in Figure&nbsp;2 and Figure&nbsp;3, our benchmark comprises 1,503 instances across <strong>four platforms 
+        (Windows, Ubuntu, macOS, and Android)</strong>, covering 34 applications and <strong>nine domains: 
+        Creativity, Browser, Education, Entertainment, Office, Programming, Productivity, Shopping, and Social</strong>.
+        Each task contains an average of 20 interaction steps, with sequence lengths ranging from 4 to 64.
+        Figure&nbsp;3 (top) further shows that the average step counts across domains are relatively balanced, indicating good coverage and diversity.
+      </p>
+
+      <p>
+        We also analyzed the step-length distributions of all tasks, as well as those of Subtask&nbsp;I and Subtask&nbsp;II.
+        Subtask&nbsp;I exhibits longer interaction sequences than Subtask&nbsp;II, as it focuses on extracting finer-grained user intentions and operational preferences.
+        This design is essential for proactive GUI agents, enabling them to better infer user goals and deliver personalized, context-aware assistance.
+        To preserve dataset authenticity and reliability, we ensured diverse step-length distributions across both subtasks.
+      </p>
+
+      <p>
+        The dataset was divided by platform, with 813 training and 240 validation instances on Desktop, 
+        and 346 training and 104 validation instances on Mobile.
+        Splits were performed according to task-length distributions within each application to preserve domain balance and comparable complexity across sets.
+        Definitions of the Desktop and Mobile action spaces are provided in the Appendix.
+      </p>
+
+      <!-- ====== Figure 1: Domain Distribution ====== -->
+      <!-- ====== Figures: Domain Distribution & Step Statistics (Equal Height) ====== -->
+      <div style="
+        display:flex;
+        justify-content:center;
+        align-items:flex-start;
+        gap:32px;
+        margin:3em 0;
+        flex-wrap:wrap;
+      ">
+        <!-- 左图 -->
+        <div style="flex:1; min-width:460px; max-width:48%; text-align:center;">
+          <img src="figures/2.png"
+              alt="Domain and Application Distribution"
+              style="width:100%; height:460px; object-fit:contain;
+                      background:white;">
+          <p style="font-size:0.95em; color:#555; margin-top:0.6em;">
+            <strong>Figure 2.</strong> Domain and application distribution across nine major categories in the ProPerGUI benchmark.
+          </p>
+        </div>
+
+        <!-- 右图 -->
+        <div style="flex:1; min-width:460px; max-width:48%; text-align:center;">
+          <img src="figures/3.png"
+              alt="Step Count Statistics by Domain and Subtask"
+              style="width:100%; height:460px; object-fit:contain;
+                      background:white;">
+          <p style="font-size:0.95em; color:#555; margin-top:0.6em;">
+            <strong>Figure 3.</strong> (Top) Average step count across nine domains. (Bottom) Step-length distributions of overall tasks, Subtask&nbsp;I, and Subtask&nbsp;II.
+          </p>
+        </div>
+      </div>
+
+      
+
+
+
+    </div>
+  </div>
+</section>
+
+
+<section id="case-study" class="section" style="margin-top:-3em; padding-top:0; padding-bottom:2em;">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered" style="margin-bottom:1em;">
+      Case Study
+    </h2>
+
+    <p style="text-align:justify;">
+      To better understand how models exhibit proactive reasoning and personalized execution beyond quantitative metrics, we provide qualitative case studies that visualize model behaviors across the two subtasks:
+    </p>
+
+    <!-- ========= CASE 1 Wim========= -->
+    <details open style="margin-top:2em;">
+      <style>
+      summary.case-title {
+        font-weight: 700;
+        font-size: 1.3em;
+        cursor: pointer;
+        color: #e67e22;
+        transition: color 0.25s ease, transform 0.15s ease;
+      }
+
+      summary.case-title:hover {
+        color: #ff9f43;       /* 浅橙色 hover 效果 */
+        transform: scale(1.02);  /* 鼠标悬停轻微放大 */
+      }
+      </style>
+
+      <summary class="case-title">
+        🪄 Case 1 – Editing a Markdown File in VSCode (Windows)
+      </summary>
+      <!-- <h3 style="font-weight:600; font-size:1.1em; margin-bottom:0.8em;">
+        🪄 Case – Editing a Markdown File in VSCode
+      </h3> -->
+      <div style="margin-top:1em;">
+
+        <!-- Input GUI Contexts -->
+        <p style="font-weight:bold; text-align:center; margin-bottom:0.8em; font-size:1.1em;">
+          <em>Input GUI Contexts</em>
+        </p>
+
+        <!-- 图片轮播 -->
+        <div style="text-align:center; position:relative; max-width:1100px; margin:auto;">
+          <img id="mainImage_case1" 
+               src="figures/case1/annotated_crop_1.png"
+               style="width:100%; max-height:650px; border-radius:14px;
+                      box-shadow:0 6px 16px rgba(0,0,0,0.15);
+                      object-fit:contain; transition:opacity 0.3s ease;">
+          <div onclick="prevImage_case1()" 
+               style="position:absolute; top:45%; left:25px; font-size:3em;
+                      color:#999; cursor:pointer; user-select:none;">&#10094;</div>
+          <div onclick="nextImage_case1()" 
+               style="position:absolute; top:45%; right:25px; font-size:3em;
+                      color:#999; cursor:pointer; user-select:none;">&#10095;</div>
+          <p id="imgCounter_case1" style="color:#666; margin-top:0.5em;">Image 1 / 10</p>
+        </div>
+
+        <script>
+          const imgs_case1 = [
+            "figures/case1/annotated_crop_1.png", "figures/case1/annotated_crop_2.png",
+            "figures/case1/annotated_crop_3.png", "figures/case1/annotated_crop_4.png",
+            "figures/case1/annotated_crop_5.png", "figures/case1/annotated_crop_6.png",
+            "figures/case1/annotated_crop_7.png", "figures/case1/annotated_crop_8.png",
+            "figures/case1/annotated_crop_9.png", "figures/case1/annotated_crop_10.png"
+          ];
+          let idx_case1 = 0;
+          const el_case1 = document.getElementById("mainImage_case1");
+          const counter_case1 = document.getElementById("imgCounter_case1");
+          function upd_case1() {
+            el_case1.style.opacity = 0;
+            setTimeout(() => {
+              el_case1.src = imgs_case1[idx_case1];
+              el_case1.style.opacity = 1;
+              counter_case1.textContent = `Image ${idx_case1 + 1} / ${imgs_case1.length}`;
+            }, 150);
+          }
+          function nextImage_case1() { idx_case1 = (idx_case1 + 1) % imgs_case1.length; upd_case1(); }
+          function prevImage_case1() { idx_case1 = (idx_case1 - 1 + imgs_case1.length) % imgs_case1.length; upd_case1(); }
+          el_case1.addEventListener("click", nextImage_case1);
+        </script>
+
+        <!-- Subtask Results -->
+        <p style="text-align:center; font-weight:bold; font-size:1.1em; margin-top:1.8em;">
+          Subtask I Results Comparison (Reasoning using the first five steps)
+        </p>
+
+        <!-- ===== Subtask I: 固定高度布局 ===== -->
+        <div style="
+          display:flex;
+          gap:20px;
+          padding:20px;
+          background:#fafafa;
+          border-radius:12px;
+          box-shadow:0 4px 12px rgba(0,0,0,0.1);
+          max-width:100%;
+          align-items:flex-start;
+        ">
+
+          <!-- 左：Ground Truth -->
+          <div style="
+            width:340px;
+            height:180px;  /* ✅ 固定高度 */
+            flex-shrink:0;
+            background:white;
+            border-radius:10px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+            padding:10px 12px;
+            display:flex;
+            flex-direction:column;
+            justify-content:flex-start;
+          ">
+            <p style="background:#8b8bf9; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">
+              Ground Truth (GT)
+            </p>
+            <p style="margin:0;"><b>Intent:</b> Set the primary title for the MD file and Save Changes.</p>
+            <p style="margin:0;"><b>Preference:</b> Set its title with a leading #, and save with Ctrl+S.</p>
+            <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+          </div>
+
+          <!-- 右：模型输出 -->
+          <div style="
+            flex:1;
+            height:180px;  /* ✅ 固定高度，与左边一致 */
+            overflow-y:auto;
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+            scroll-behavior:smooth;
+            padding-right:6px;
+          ">
+
+            <!-- 模型卡片 -->
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-5</p>
+              <p style="margin:0;"><b>Intent:</b> Edit the note1.md file by adding Markdown heading content and saving the changes.</p>
+              <p style="margin:0;"><b>Preference:</b> They combine keyboard shortcuts with mouse clicks to open .md, type headings, and save their work.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#60a5fa; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-4o</p>
+              <p style="margin:0;"><b>Intent:</b> The user is editing a file and saving changes.</p>
+              <p style="margin:0;"><b>Preference:</b> The user frequently uses hotkeys for actions.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#8b5cf6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Claude</p>
+              <p style="margin:0;"><b>Intent:</b> The user is working with a .md file, likely editing or reviewing documentation content.</p>
+              <p style="margin:0;"><b>Preference:</b> The user demonstrates efficient workflow habits by frequently using keyboard shortcuts and hotkeys for quick operations.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#06b6d4; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Gemini</p>
+              <p style="margin:0;"><b>Intent:</b> The user is editing and saving a document, likely a Markdown file, within a code or text editor.</p>
+              <p style="margin:0;"><b>Preference:</b> The user fluidly combines keyboard shortcuts with direct mouse clicks for navigation and editing.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#22c55e; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen</p>
+              <p style="margin:0;"><b>Intent:</b> The user is editing and saving a .md file to update project documentation.</p>
+              <p style="margin:0;"><b>Preference:</b> The user alternates between keyboard shortcuts and mouse clicks for file navigation and editing, with frequent use of save operations.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#f59e0b; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">DeepSeek</p>
+              <p style="margin:0;"><b>Intent:</b> The user is editing and formatting .md file using keyboard shortcuts and mouse interactions.</p>
+              <p style="margin:0;"><b>Preference:</b> The user frequently relies on keyboard shortcuts for efficiency and occasionally uses mouse clicks for specific elements.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#ef4444; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen-4B-Instruct (FT)</p>
+              <p style="margin:0;"><b>Intent:</b> The user is likely editing a file (.md) and using hotkeys to navigate and save, suggesting a goal of modifying or saving documentation.</p>
+              <p style="margin:0;"><b>Preference:</b> Uses mouse clicks to focus items (.md), defines the title using a line prefixed with # and saves via Ctrl+S.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Subtask II 图片展示 ===== -->
+        <div style="margin-top:2em;">
+          <p style="font-weight:600; text-align:center; font-size:1.1em; margin-top:1.8em;">
+            Subtask II Results Comparison (The last five steps are used for action verification)
+          </p>
+
+          <div style="
+            display:flex;
+            gap:20px;
+            padding:20px;
+            background:#fafafa;
+            border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            max-width:100%;
+            align-items:flex-start;
+          ">
+
+            <!-- 左侧：Ground Truth -->
+            <div style="
+              width:200px;
+              height:220px;  /* ✅ 可调节高度，与上部分保持一致 */
+              flex-shrink:0;
+              background:white;
+              border-radius:10px;
+              box-shadow:0 2px 8px rgba(0,0,0,0.1);
+              padding:10px 12px;
+              display:flex;
+              flex-direction:column;
+              justify-content:flex-start;
+            ">
+              <p style="background:#1e3a8a; color:white; font-weight:bold; padding:6px 8px;
+                        border-radius:8px; margin:0 0 8px 0;">Ground Truth Actions</p>
+              <p style="margin:0;">
+                <strong>a6:</strong> click (604, 98)<br>
+                <strong>a7:</strong> press key #<br>
+                <strong>a8:</strong> press key space<br>
+                <strong>a9:</strong> hotkey (Ctrl, S)<br>
+                <strong>a10:</strong> finish
+              </p>
+            </div>
+
+            <!-- 右侧：模型预测结果 -->
+            <div style="
+              flex:1;
+              height:220px;  /* ✅ 与左边等高 */
+              overflow-y:auto;
+              display:flex;
+              flex-direction:column;
+              gap:12px;
+              scroll-behavior:smooth;
+              padding-right:6px;
+            ">
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-5 Prediction</p>
+                <p style="margin:0;">
+                  click (372, 97)<br>
+                  hotkey (Shift, #)<br>
+                  press key space<br>
+                  hotkey (Ctrl, S)<br>
+                  click (160, 532)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#60a5fa; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-4o Prediction</p>
+                <p style="margin:0;">
+                  hotkey (Shift, #)<br>
+                  press key space<br>
+                  hotkey (Ctrl, S)<br>
+                  hotkey (Ctrl, S)<br>
+                  click (210, 350)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#0284c7; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen-vl-max Prediction</p>
+                <p style="margin:0;">
+                  click (372, 97)<br>
+                  click (372, 97)<br>
+                  click (372, 97)<br>
+                  click (372, 97)<br>
+                  click (372, 97)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#ef4444; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">UITAR-7B Prediction</p>
+                <p style="margin:0;">
+                  click (115, 282)<br>
+                  hotkey (shift, #)<br>
+                  click (115, 282)<br>
+                  hotkey (shift, #)<br>
+                  hotkey (shift, #)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </details>
+    <!-- ========= CASE 2 Win========= -->
+    <details style="margin-top:2em;">
+
+      <style>
+      summary.case-title {
+        font-weight: 700;
+        font-size: 1.3em;
+        cursor: pointer;
+        color: #e67e22;
+        transition: color 0.25s ease, transform 0.15s ease;
+      }
+
+      summary.case-title:hover {
+        color: #ff9f43;       /* 浅橙色 hover 效果 */
+        transform: scale(1.02);  /* 鼠标悬停轻微放大 */
+      }
+      </style>
+
+      <summary class="case-title">
+        🪄 Case 2 – Shopping in Amazon (Windows)
+      </summary>
+      <!-- <h3 style="font-weight:600; font-size:1.1em; margin-bottom:0.8em;">
+        🪄 Case – Editing a Markdown File in VSCode
+      </h3> -->
+      <div style="margin-top:1em;">
+
+        <!-- Input GUI Contexts -->
+        <p style="font-weight:bold; text-align:center; margin-bottom:0.8em; font-size:1.1em;">
+          <em>Input GUI Contexts</em>
+        </p>
+
+        <!-- 图片轮播 -->
+        <div style="text-align:center; position:relative; max-width:1100px; margin:auto;">
+          <img id="mainImage_case2" 
+               src="figures/case2/annotated_crop_1.png"
+               style="width:100%; max-height:650px; border-radius:14px;
+                      box-shadow:0 6px 16px rgba(0,0,0,0.15);
+                      object-fit:contain; transition:opacity 0.3s ease;">
+          <div onclick="prevImage_case2()" 
+               style="position:absolute; top:45%; left:25px; font-size:3em;
+                      color:#999; cursor:pointer; user-select:none;">&#10094;</div>
+          <div onclick="nextImage_case2()" 
+               style="position:absolute; top:45%; right:25px; font-size:3em;
+                      color:#999; cursor:pointer; user-select:none;">&#10095;</div>
+          <p id="imgCounter_case2" style="color:#666; margin-top:0.5em;">Image 1 / 13</p>
+        </div>
+
+        <script>
+          const imgs_case2 = [
+            "figures/case2/annotated_crop_1.png", "figures/case2/annotated_crop_2.png",
+            "figures/case2/annotated_crop_3.png", "figures/case2/annotated_crop_4.png",
+            "figures/case2/annotated_crop_5.png", "figures/case2/annotated_crop_6.png",
+            "figures/case2/annotated_crop_7.png", "figures/case2/annotated_crop_8.png",
+            "figures/case2/annotated_crop_9.png", "figures/case2/annotated_crop_10.png",
+            "figures/case2/annotated_crop_11.png", "figures/case2/annotated_crop_12.png",
+            "figures/case2/annotated_crop_13.png"
+          ];
+          let idx_case2 = 0;
+          const el_case2 = document.getElementById("mainImage_case2");
+          const counter_case2 = document.getElementById("imgCounter_case2");
+          function upd_case2() {
+            el_case2.style.opacity = 0;
+            setTimeout(() => {
+              el_case2.src = imgs_case2[idx_case2];
+              el_case2.style.opacity = 1;
+              counter_case2.textContent = `Image ${idx_case2 + 1} / ${imgs_case2.length}`;
+            }, 150);
+          }
+          function nextImage_case2() { idx_case2 = (idx_case2 + 1) % imgs_case2.length; upd_case2(); }
+          function prevImage_case2() { idx_case2 = (idx_case2 - 1 + imgs_case2.length) % imgs_case2.length; upd_case2(); }
+          el_case2.addEventListener("click", nextImage_case2);
+        </script>
+
+        <!-- Subtask Results -->
+        <p style="text-align:center; font-weight:bold; font-size:1.1em; margin-top:1.8em;">
+          Subtask I Results Comparison (Reasoning using the first nine steps)
+        </p>
+
+        <!-- ===== Subtask I: 固定高度布局 ===== -->
+        <div style="
+          display:flex;
+          gap:20px;
+          padding:20px;
+          background:#fafafa;
+          border-radius:12px;
+          box-shadow:0 4px 12px rgba(0,0,0,0.1);
+          max-width:100%;
+          align-items:flex-start;
+        ">
+
+          <!-- 左：Ground Truth -->
+          <div style="
+            width:340px;
+            height:240px;  /* ✅ 固定高度 */
+            flex-shrink:0;
+            background:white;
+            border-radius:10px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+            padding:10px 12px;
+            display:flex;
+            flex-direction:column;
+            justify-content:flex-start;
+          ">
+            <p style="background:#8b8bf9; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">
+              Ground Truth (GT)
+            </p>
+            <p style="margin:0;"><b>Intent:</b> Select a pair of men's football shoes and add them to the shopping cart.</p>
+            <p style="margin:0;"><b>Preference:</b> Searches by clicking the search bar, typing a query, and pressing Enter; scrolls results; adds the 8 US shoes to the shopping cart. </p>
+            <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+          </div>
+
+          <!-- 右：模型输出 -->
+          <div style="
+            flex:1;
+            height:240px;  /* ✅ 固定高度，与左边一致 */
+            overflow-y:auto;
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+            scroll-behavior:smooth;
+            padding-right:6px;
+          ">
+
+            <!-- 模型卡片 -->
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-5</p>
+              <p style="margin:0;"><b>Intent:</b> Shop for men's football shoes on Amazon and add the correct size to the cart.</p>
+              <p style="margin:0;"><b>Preference:</b> They used a direct keyword search, scrolled briefly, and repeatedly tried Add to Cart while switching between US size 8 and 9.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#60a5fa; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-4o</p>
+              <p style="margin:0;"><b>Intent:</b> The user is attempting to purchase men's football shoes in size 8 US on Amazon.</p>
+              <p style="margin:0;"><b>Preference:</b> The user prefers to interact with the interface by clicking and typing directly.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#8b5cf6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Claude</p>
+              <p style="margin:0;"><b>Intent:</b> The user wants to purchase football shoes for men, specifically looking for size 8 US.</p>
+              <p style="margin:0;"><b>Preference:</b> The user demonstrates a direct and efficient interaction style, quickly navigating through search and product selection with minimal hesitation.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#06b6d4; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Gemini</p>
+              <p style="margin:0;"><b>Intent:</b> The user wants to add a pair of men's football shoes to the shopping cart after selecting the correct size.</p>
+              <p style="margin:0;"><b>Preference:</b> The user types a specific search query and then repeatedly clicks on different options, suggesting some hesitation when making a final selection.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#22c55e; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen</p>
+              <p style="margin:0;"><b>Intent:</b> To select size 8 US for men's football shoes and successfully add the item to the shopping cart on Amazon.sg.</p>
+              <p style="margin:0;"><b>Preference:</b> The user repeatedly attempts to add the item to the cart while toggling between size options, showing indecision about the correct size selection.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#f59e0b; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">DeepSeek</p>
+              <p style="margin:0;"><b>Intent:</b> The user intends to find and add men's football shoes to their cart, likely exploring sizes 8 and 9 US.</p>
+              <p style="margin:0;"><b>Preference:</b> The user interacts by searching, browsing, and repeatedly selecting sizes before adding items to the cart.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#ef4444; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen-4B-Instruct (FT)</p>
+              <p style="margin:0;"><b>Intent:</b> Search for men's football shoes and add items to the shopping cart, including selecting appropriate size options.</p>
+              <p style="margin:0;"><b>Preference:</b> Uses the site search bar and submits with Enter; switching size options (8 US) before adding to cart; adds multiple items to cart during a single shopping session.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Subtask II 图片展示 ===== -->
+        <div style="margin-top:2em;">
+          <p style="font-weight:600; text-align:center; font-size:1.1em; margin-top:1.8em;">
+            Subtask II Results Comparison (The last four steps are used for action verification)
+          </p>
+
+          <div style="
+            display:flex;
+            gap:20px;
+            padding:20px;
+            background:#fafafa;
+            border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            max-width:100%;
+            align-items:flex-start;
+          ">
+
+            <!-- 左侧：Ground Truth -->
+            <div style="
+              width:200px;
+              height:220px;  /* ✅ 可调节高度，与上部分保持一致 */
+              flex-shrink:0;
+              background:white;
+              border-radius:10px;
+              box-shadow:0 2px 8px rgba(0,0,0,0.1);
+              padding:10px 12px;
+              display:flex;
+              flex-direction:column;
+              justify-content:flex-start;
+            ">
+              <p style="background:#1e3a8a; color:white; font-weight:bold; padding:6px 8px;
+                        border-radius:8px; margin:0 0 8px 0;">Ground Truth Actions</p>
+              <p style="margin:0;">
+                <strong>a10:</strong> click (901, 594)<br>
+                <strong>a11:</strong> click (897, 671)<br>
+                <strong>a12:</strong> click (1136, 732)<br>
+                <strong>a13:</strong> finish
+              </p>
+            </div>
+
+            <!-- 右侧：模型预测结果 -->
+            <div style="
+              flex:1;
+              height:220px;  /* ✅ 与左边等高 */
+              overflow-y:auto;
+              display:flex;
+              flex-direction:column;
+              gap:12px;
+              scroll-behavior:smooth;
+              padding-right:6px;
+            ">
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-5 Prediction</p>
+                <p style="margin:0;">
+                  click (735, 480)<br>
+                  click (1040, 655)<br>
+                  finish<br>
+                  click (1000, 690)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#60a5fa; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-4o Prediction</p>
+                <p style="margin:0;">
+                  click (1350, 895)<br>
+                  click (1240, 710)<br>
+                  scroll (0, 100)<br>
+                  click (1350, 895)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#0284c7; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen-vl-max Prediction</p>
+                <p style="margin:0;">
+                  click (698, 547)<br>
+                  click (864, 562)<br>
+                  click (284, 591)<br>
+                  click (864, 583)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#ef4444; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">UITAR-7B Prediction</p>
+                <p style="margin:0;">
+                  click (892, 675)<br>
+                  click (1112, 740)<br>
+                  click (1763, 342)<br>
+                  click (1112, 740)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </details>
+    <!-- ========= CASE 3 ubuntu========= -->
+    <details style="margin-top:2em;">
+
+      <style>
+      summary.case-title {
+        font-weight: 700;
+        font-size: 1.3em;
+        cursor: pointer;
+        color: #e67e22;
+        transition: color 0.25s ease, transform 0.15s ease;
+      }
+
+      summary.case-title:hover {
+        color: #ff9f43;       /* 浅橙色 hover 效果 */
+        transform: scale(1.02);  /* 鼠标悬停轻微放大 */
+      }
+      </style>
+
+      <summary class="case-title">
+        🪄 Case 3 – Set monospace font in Overleaf (Ubuntu)
+      </summary>
+      <!-- <h3 style="font-weight:600; font-size:1.1em; margin-bottom:0.8em;">
+        🪄 Case – Editing a Markdown File in VSCode
+      </h3> -->
+      <div style="margin-top:1em;">
+
+        <!-- Input GUI Contexts -->
+        <p style="font-weight:bold; text-align:center; margin-bottom:0.8em; font-size:1.1em;">
+          <em>Input GUI Contexts</em>
+        </p>
+
+        <!-- 图片轮播 -->
+        <div style="text-align:center; position:relative; max-width:1100px; margin:auto;">
+          <img id="mainImage_case3" 
+               src="figures/case3/annotated_crop_1.png"
+               style="width:100%; max-height:650px; border-radius:14px;
+                      box-shadow:0 6px 16px rgba(0,0,0,0.15);
+                      object-fit:contain; transition:opacity 0.3s ease;">
+          <div onclick="prevImage_case3()" 
+               style="position:absolute; top:45%; left:25px; font-size:3em;
+                      color:#999; cursor:pointer; user-select:none;">&#10094;</div>
+          <div onclick="nextImage_case3()" 
+               style="position:absolute; top:45%; right:25px; font-size:3em;
+                      color:#999; cursor:pointer; user-select:none;">&#10095;</div>
+          <p id="imgCounter_case3" style="color:#666; margin-top:0.5em;">Image 1 / 16</p>
+        </div>
+
+        <script>
+          const imgs_case3 = [
+            "figures/case3/annotated_crop_1.png", "figures/case3/annotated_crop_2.png",
+            "figures/case3/annotated_crop_3.png", "figures/case3/annotated_crop_4.png",
+            "figures/case3/annotated_crop_5.png", "figures/case3/annotated_crop_6.png",
+            "figures/case3/annotated_crop_7.png", "figures/case3/annotated_crop_8.png",
+            "figures/case3/annotated_crop_9.png", "figures/case3/annotated_crop_10.png",
+            "figures/case3/annotated_crop_11.png", "figures/case3/annotated_crop_12.png",
+            "figures/case3/annotated_crop_13.png", "figures/case3/annotated_crop_14.png",
+            "figures/case3/annotated_crop_15.png", "figures/case3/annotated_crop_16.png",
+          ];
+          let idx_case3 = 0;
+          const el_case3 = document.getElementById("mainImage_case3");
+          const counter_case3 = document.getElementById("imgCounter_case3");
+          function upd_case3() {
+            el_case3.style.opacity = 0;
+            setTimeout(() => {
+              el_case3.src = imgs_case3[idx_case3];
+              el_case3.style.opacity = 1;
+              counter_case3.textContent = `Image ${idx_case3 + 1} / ${imgs_case3.length}`;
+            }, 150);
+          }
+          function nextImage_case3() { idx_case3 = (idx_case3 + 1) % imgs_case3.length; upd_case3(); }
+          function prevImage_case3() { idx_case3 = (idx_case3 - 1 + imgs_case3.length) % imgs_case3.length; upd_case3(); }
+          el_case3.addEventListener("click", nextImage_case3);
+        </script>
+
+        <!-- Subtask Results -->
+        <p style="text-align:center; font-weight:bold; font-size:1.1em; margin-top:1.8em;">
+          Subtask I Results Comparison (Reasoning using the first eleven steps)
+        </p>
+
+        <!-- ===== Subtask I: 固定高度布局 ===== -->
+        <div style="
+          display:flex;
+          gap:20px;
+          padding:20px;
+          background:#fafafa;
+          border-radius:12px;
+          box-shadow:0 4px 12px rgba(0,0,0,0.1);
+          max-width:100%;
+          align-items:flex-start;
+        ">
+
+          <!-- 左：Ground Truth -->
+          <div style="
+            width:340px;
+            height:260px;  /* ✅ 固定高度 */
+            flex-shrink:0;
+            background:white;
+            border-radius:10px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+            padding:10px 12px;
+            display:flex;
+            flex-direction:column;
+            justify-content:flex-start;
+          ">
+            <p style="background:#8b8bf9; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">
+              Ground Truth (GT)
+            </p>
+            <p style="margin:0;"><b>Intent:</b> Apply code-style formatting to selected text elements.</p>
+            <p style="margin:0;"><b>Preference:</b> The user repeatedly formats selected text by typing the LaTeX macro '\\texttt', then manually inserts curly braces via { and }, clicking to select the target text to wrap. They perform this sequence on multiple items.</p>
+            <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+          </div>
+
+          <!-- 右：模型输出 -->
+          <div style="
+            flex:1;
+            height:260px;  /* ✅ 固定高度，与左边一致 */
+            overflow-y:auto;
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+            scroll-behavior:smooth;
+            padding-right:6px;
+          ">
+
+            <!-- 模型卡片 -->
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-5</p>
+              <p style="margin:0;"><b>Intent:</b> Apply monospaced formatting by writing a LaTeX \\texttt{...} command.</p>
+              <p style="margin:0;"><b>Preference:</b> They primarily type LaTeX commands and braces via keyboard, using Shift for symbols, and occasionally click to select elements like 'Lisi'.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-4o</p>
+              <p style="margin:0;"><b>Intent:</b> The user is trying to input or format text using keyboard shortcuts and clicks.</p>
+              <p style="margin:0;"><b>Preference:</b> The user interacts by clicking elements and using keyboard shortcuts.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Claude</p>
+              <p style="margin:0;"><b>Intent:</b> The user is formatting text with LaTeX-style commands and selecting or interacting with an element named 'Lisi'.</p>
+              <p style="margin:0;"><b>Preference:</b> The user demonstrates proficiency with keyboard shortcuts and text formatting, using shift key combinations efficiently.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Gemini</p>
+              <p style="margin:0;"><b>Intent:</b> The user wants to apply typewriter font formatting to the text 'Lisi' using a LaTeX command.</p>
+              <p style="margin:0;"><b>Preference:</b> The user types out command structures and then clicks to insert the desired content.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen</p>
+              <p style="margin:0;"><b>Intent:</b> To format the text 'Lisi' in typewriter font using LaTeX's \\texttt command.</p>
+              <p style="margin:0;"><b>Preference:</b> The user combines keyboard shortcuts with precise element clicks to apply LaTeX formatting but appears to have created an incomplete command structure.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">DeepSeek</p>
+              <p style="margin:0;"><b>Intent:</b> The user is entering LaTeX-formatted text and interacting with UI elements, likely for document editing or data input.</p>
+              <p style="margin:0;"><b>Preference:</b> The user alternates between mouse clicks and keyboard input for navigation and text entry.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#ef4444; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen-4B-Instruct (FT)</p>
+              <p style="margin:0;"><b>Intent:</b> Wrap selected text items with teletype formatting using a command and curly braces.</p>
+              <p style="margin:0;"><b>Preference:</b> The user repeatedly formats selected text by typing the LaTeX macro \texttt, manually inserting curly braces with Shift + { and Shift + }, and clicking to select target words to wrap.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Subtask II 图片展示 ===== -->
+        <div style="margin-top:2em;">
+          <p style="font-weight:600; text-align:center; font-size:1.1em; margin-top:1.8em;">
+            Subtask II Results Comparison (The last five steps are used for action verification)
+          </p>
+
+          <div style="
+            display:flex;
+            gap:20px;
+            padding:20px;
+            background:#fafafa;
+            border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            max-width:100%;
+            align-items:flex-start;
+          ">
+
+            <!-- 左侧：Ground Truth -->
+            <div style="
+              width:200px;
+              height:220px;  /* ✅ 可调节高度，与上部分保持一致 */
+              flex-shrink:0;
+              background:white;
+              border-radius:10px;
+              box-shadow:0 2px 8px rgba(0,0,0,0.1);
+              padding:10px 12px;
+              display:flex;
+              flex-direction:column;
+              justify-content:flex-start;
+            ">
+              <p style="background:#1e3a8a; color:white; font-weight:bold; padding:6px 8px;
+                        border-radius:8px; margin:0 0 8px 0;">Ground Truth Actions</p>
+              <p style="margin:0;">
+                <strong>a12:</strong> type text: \texttt<br>
+                <strong>a13:</strong> press key { <br>
+                <strong>a14:</strong> click (468, 633) <br>
+                <strong>a15:</strong> press key } <br>
+                <strong>a16:</strong> finish
+              </p>
+            </div>
+
+            <!-- 右侧：模型预测结果 -->
+            <div style="
+              flex:1;
+              height:220px;  /* ✅ 与左边等高 */
+              overflow-y:auto;
+              display:flex;
+              flex-direction:column;
+              gap:12px;
+              scroll-behavior:smooth;
+              padding-right:6px;
+            ">
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-5 Prediction</p>
+                <p style="margin:0;">
+                  type text: \texttt<br>
+                  finish <br>
+                  finish <br>
+                  finish <br>
+                  finish
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#60a5fa; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-4o Prediction</p>
+                <p style="margin:0;">
+                  type text: \texttt<br>
+                  click (370, 644) <br>
+                  press key } <br>
+                  click (370, 644) <br>
+                  click (369, 612)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#0284c7; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen-vl-max Prediction</p>
+                <p style="margin:0;">
+                  click (369, 612)<br>
+                  click (369, 487) <br>
+                  click (369, 487) <br>
+                  click (369, 487) <br>
+                  click (369, 487)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#ef4444; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">UITAR-7B Prediction</p>
+                <p style="margin:0;">
+                  drag from (370, 570) to (421, 570)<br>
+                  drag from (370, 570) to (421, 570) <br>
+                  drag from (370, 570) to (421, 570) <br>
+                  drag from (370, 570) to (421, 570) <br>
+                  drag from (370, 570) to (421, 570)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </details>
+    <!-- ========= CASE 4 Andorid========= -->
+    <details style="margin-top:2em;">
+
+      <style>
+      summary.case-title {
+        font-weight: 700;
+        font-size: 1.3em;
+        cursor: pointer;
+        color: #e67e22;
+        transition: color 0.25s ease, transform 0.15s ease;
+      }
+
+      summary.case-title:hover {
+        color: #ff9f43;       /* 浅橙色 hover 效果 */
+        transform: scale(1.02);  /* 鼠标悬停轻微放大 */
+      }
+      </style>
+
+      <summary class="case-title">
+        🪄 Case 4 – Delete emails in Gmail (Android)
+      </summary>
+      <!-- <h3 style="font-weight:600; font-size:1.1em; margin-bottom:0.8em;">
+        🪄 Case – Editing a Markdown File in VSCode
+      </h3> -->
+      <div style="margin-top:1em;">
+
+        <!-- Input GUI Contexts -->
+        <p style="font-weight:bold; text-align:center; margin-bottom:0.8em; font-size:1.1em;">
+          <em>Input GUI Contexts</em>
+        </p>
+
+        <!-- 图片轮播 -->
+        <div style="text-align:center; position:relative; max-width:1100px; margin:auto;">
+          <img id="mainImage_case4" 
+               src="figures/case4/annotated_crop_1.png"
+               style="width:100%; max-height:650px; border-radius:14px;
+                      box-shadow:0 6px 16px rgba(0,0,0,0.15);
+                      object-fit:contain; transition:opacity 0.3s ease;">
+          <div onclick="prevImage_case4()" 
+               style="position:absolute; top:45%; left:25px; font-size:3em;
+                      color:#999; cursor:pointer; user-select:none;">&#10094;</div>
+          <div onclick="nextImage_case4()" 
+               style="position:absolute; top:45%; right:25px; font-size:3em;
+                      color:#999; cursor:pointer; user-select:none;">&#10095;</div>
+          <p id="imgCounter_case4" style="color:#666; margin-top:0.5em;">Image 1 / 7</p>
+        </div>
+
+        <script>
+          const imgs_case4 = [
+            "figures/case4/annotated_crop_1.png", "figures/case4/annotated_crop_2.png",
+            "figures/case4/annotated_crop_3.png", "figures/case4/annotated_crop_4.png",
+            "figures/case4/annotated_crop_5.png", "figures/case4/annotated_crop_6.png",
+            "figures/case4/annotated_crop_7.png",
+          ];
+          let idx_case4 = 0;
+          const el_case4 = document.getElementById("mainImage_case4");
+          const counter_case4 = document.getElementById("imgCounter_case4");
+          function upd_case4() {
+            el_case4.style.opacity = 0;
+            setTimeout(() => {
+              el_case4.src = imgs_case4[idx_case4];
+              el_case4.style.opacity = 1;
+              counter_case4.textContent = `Image ${idx_case4 + 1} / ${imgs_case4.length}`;
+            }, 150);
+          }
+          function nextImage_case4() { idx_case4 = (idx_case4 + 1) % imgs_case4.length; upd_case4(); }
+          function prevImage_case4() { idx_case4 = (idx_case4 - 1 + imgs_case4.length) % imgs_case4.length; upd_case4(); }
+          el_case4.addEventListener("click", nextImage_case4);
+        </script>
+
+        <!-- Subtask Results -->
+        <p style="text-align:center; font-weight:bold; font-size:1.1em; margin-top:1.8em;">
+          Subtask I Results Comparison (Reasoning using the first five steps)
+        </p>
+
+        <!-- ===== Subtask I: 固定高度布局 ===== -->
+        <div style="
+          display:flex;
+          gap:20px;
+          padding:20px;
+          background:#fafafa;
+          border-radius:12px;
+          box-shadow:0 4px 12px rgba(0,0,0,0.1);
+          max-width:100%;
+          align-items:flex-start;
+        ">
+
+          <!-- 左：Ground Truth -->
+          <div style="
+            width:340px;
+            height:240px;  /* ✅ 固定高度 */
+            flex-shrink:0;
+            background:white;
+            border-radius:10px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+            padding:10px 12px;
+            display:flex;
+            flex-direction:column;
+            justify-content:flex-start;
+          ">
+            <p style="background:#8b8bf9; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">
+              Ground Truth (GT)
+            </p>
+            <p style="margin:0;"><b>Intent:</b> Permanently delete unwanted marketing emails to clean up the mailbox.</p>
+            <p style="margin:0;"><b>Preference:</b> Navigates to the All view, opens individual marketing emails and immediately uses Permanently delete rather than bulk-selecting or archiving.</p>
+            <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+          </div>
+
+          <!-- 右：模型输出 -->
+          <div style="
+            flex:1;
+            height:240px;  /* ✅ 固定高度，与左边一致 */
+            overflow-y:auto;
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+            scroll-behavior:smooth;
+            padding-right:6px;
+          ">
+
+            <!-- 模型卡片 -->
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-5</p>
+              <p style="margin:0;"><b>Intent:</b> Permanently delete unwanted emails to clean up the inbox.</p>
+              <p style="margin:0;"><b>Preference:</b> They manually open individual emails and use the permanent delete option, proceeding one by one.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#60a5fa; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-4o</p>
+              <p style="margin:0;"><b>Intent:</b> The user is managing and deleting emails from their inbox.</p>
+              <p style="margin:0;"><b>Preference:</b> The user prefers to interact by clicking on specific elements.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#8b5cf6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Claude</p>
+              <p style="margin:0;"><b>Intent:</b> The user is cleaning up their email or account by permanently deleting items from Google, Uber Eats, and Notion Marketplace. </p>
+              <p style="margin:0;"><b>Preference:</b> The user demonstrates efficient navigation by directly clicking on specific elements and using permanent deletion options without hesitation.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#06b6d4; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Gemini</p>
+              <p style="margin:0;"><b>Intent:</b> The user wants to permanently delete multiple items from a list.</p>
+              <p style="margin:0;"><b>Preference:</b> The user prefers to directly click on specific elements to perform repetitive actions.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#22c55e; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen</p>
+              <p style="margin:0;"><b>Intent:</b> Permanently remove specific emails from selected senders in the email inbox.</p>
+              <p style="margin:0;"><b>Preference:</b> The user systematically deletes specific emails by selecting individual senders and confirming permanent deletion after initial bulk selection attempts.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#f59e0b; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">DeepSeek</p>
+              <p style="margin:0;"><b>Intent:</b> The user intends to permanently delete unwanted emails and then access the Notion Marketplace.</p>
+              <p style="margin:0;"><b>Preference:</b> The user interacts by first selecting all items, then deleting specific emails permanently, and finally exploring other applications.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#ef4444; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen-4B-Instruct (FT)</p>
+              <p style="margin:0;"><b>Intent:</b> Delete emails from Google accounts.</p>
+              <p style="margin:0;"><b>Preference:</b> User browses the entire app, selects specific email accounts, and immediately confirms deletion with 'Delete permanently'. They also open the Notion Marketplace to explore features.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Subtask II 图片展示 ===== -->
+        <div style="margin-top:2em;">
+          <p style="font-weight:600; text-align:center; font-size:1.1em; margin-top:1.8em;">
+            Subtask II Results Comparison (The last tow steps are used for action verification)
+          </p>
+
+          <div style="
+            display:flex;
+            gap:20px;
+            padding:20px;
+            background:#fafafa;
+            border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            max-width:100%;
+            align-items:flex-start;
+          ">
+
+            <!-- 左侧：Ground Truth -->
+            <div style="
+              width:200px;
+              height:220px;  /* ✅ 可调节高度，与上部分保持一致 */
+              flex-shrink:0;
+              background:white;
+              border-radius:10px;
+              box-shadow:0 2px 8px rgba(0,0,0,0.1);
+              padding:10px 12px;
+              display:flex;
+              flex-direction:column;
+              justify-content:flex-start;
+            ">
+              <p style="background:#1e3a8a; color:white; font-weight:bold; padding:6px 8px;
+                        border-radius:8px; margin:0 0 8px 0;">Ground Truth Actions</p>
+              <p style="margin:0;">
+                <strong>a7:</strong> click (764, 214)<br>
+                <strong>a8:</strong> finish
+              </p>
+            </div>
+
+            <!-- 右侧：模型预测结果 -->
+            <div style="
+              flex:1;
+              height:220px;  /* ✅ 与左边等高 */
+              overflow-y:auto;
+              display:flex;
+              flex-direction:column;
+              gap:12px;
+              scroll-behavior:smooth;
+              padding-right:6px;
+            ">
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-5 Prediction</p>
+                <p style="margin:0;">
+                  click (870,380)<br>
+                  scroll up from (540, 1800) to (540, 400)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#60a5fa; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-4o Prediction</p>
+                <p style="margin:0;">
+                  click (854, 580)<br>
+                  click (854, 580)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#0284c7; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen-vl-max Prediction</p>
+                <p style="margin:0;">
+                  click (574, 845)<br>
+                  click (440, 1327)
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#ef4444; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">UITAR-7B Prediction</p>
+                <p style="margin:0;">
+                  click (546, 1261)<br>
+                  click (35, 858)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </details>
+    <!-- ========= CASE 5 Mac========= -->
+    <details style="margin-top:2em;">
+
+      <style>
+      summary.case-title {
+        font-weight: 700;
+        font-size: 1.3em;
+        cursor: pointer;
+        color: #e67e22;
+        transition: color 0.25s ease, transform 0.15s ease;
+      }
+
+      summary.case-title:hover {
+        color: #ff9f43;       /* 浅橙色 hover 效果 */
+        transform: scale(1.02);  /* 鼠标悬停轻微放大 */
+      }
+      </style>
+
+      <summary class="case-title">
+        🪄 Case 5 – Add travel pictures in Notion (macOS)
+      </summary>
+      <!-- <h3 style="font-weight:600; font-size:1.1em; margin-bottom:0.8em;">
+        🪄 Case – Editing a Markdown File in VSCode
+      </h3> -->
+      <div style="margin-top:1em;">
+
+        <!-- Input GUI Contexts -->
+        <p style="font-weight:bold; text-align:center; margin-bottom:0.8em; font-size:1.1em;">
+          <em>Input GUI Contexts</em>
+        </p>
+
+        <!-- 图片轮播 -->
+        <div style="text-align:center; position:relative; max-width:1100px; margin:auto;">
+          <img id="mainImage_case5" 
+               src="figures/case5/annotated_crop_1.png"
+               style="width:100%; max-height:650px; border-radius:14px;
+                      box-shadow:0 6px 16px rgba(0,0,0,0.15);
+                      object-fit:contain; transition:opacity 0.3s ease;">
+          <div onclick="prevImage_case5()" 
+               style="position:absolute; top:45%; left:25px; font-size:3em;
+                      color:#999; cursor:pointer; user-select:none;">&#10094;</div>
+          <div onclick="nextImage_case5()" 
+               style="position:absolute; top:45%; right:25px; font-size:3em;
+                      color:#999; cursor:pointer; user-select:none;">&#10095;</div>
+          <p id="imgCounter_case5" style="color:#666; margin-top:0.5em;">Image 1 / 17</p>
+        </div>
+
+        <script>
+          const imgs_case5 = [
+            "figures/case5/annotated_crop_1.png", "figures/case5/annotated_crop_2.png",
+            "figures/case5/annotated_crop_3.png", "figures/case5/annotated_crop_4.png",
+            "figures/case5/annotated_crop_5.png", "figures/case5/annotated_crop_6.png",
+            "figures/case5/annotated_crop_7.png", "figures/case5/annotated_crop_8.png",
+            "figures/case5/annotated_crop_9.png", "figures/case5/annotated_crop_10.png",
+            "figures/case5/annotated_crop_11.png", "figures/case5/annotated_crop_12.png",
+            "figures/case5/annotated_crop_13.png", "figures/case5/annotated_crop_14.png",
+            "figures/case5/annotated_crop_15.png", "figures/case5/annotated_crop_16.png",
+            "figures/case5/annotated_crop_17.png"
+          ];
+          let idx_case5 = 0;
+          const el_case5 = document.getElementById("mainImage_case5");
+          const counter_case5 = document.getElementById("imgCounter_case5");
+          function upd_case5() {
+            el_case5.style.opacity = 0;
+            setTimeout(() => {
+              el_case5.src = imgs_case5[idx_case5];
+              el_case5.style.opacity = 1;
+              counter_case5.textContent = `Image ${idx_case5 + 1} / ${imgs_case5.length}`;
+            }, 150);
+          }
+          function nextImage_case5() { idx_case5 = (idx_case5 + 1) % imgs_case5.length; upd_case5(); }
+          function prevImage_case5() { idx_case5 = (idx_case5 - 1 + imgs_case5.length) % imgs_case5.length; upd_case5(); }
+          el_case5.addEventListener("click", nextImage_case5);
+        </script>
+
+        <!-- Subtask Results -->
+        <p style="text-align:center; font-weight:bold; font-size:1.1em; margin-top:1.8em;">
+          Subtask I Results Comparison (Reasoning using the first ten steps)
+        </p>
+
+        <!-- ===== Subtask I: 固定高度布局 ===== -->
+        <div style="
+          display:flex;
+          gap:20px;
+          padding:20px;
+          background:#fafafa;
+          border-radius:12px;
+          box-shadow:0 4px 12px rgba(0,0,0,0.1);
+          max-width:100%;
+          align-items:flex-start;
+        ">
+
+          <!-- 左：Ground Truth -->
+          <div style="
+            width:340px;
+            height:240px;  /* ✅ 固定高度 */
+            flex-shrink:0;
+            background:white;
+            border-radius:10px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+            padding:10px 12px;
+            display:flex;
+            flex-direction:column;
+            justify-content:flex-start;
+          ">
+            <p style="background:#8b8bf9; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">
+              Ground Truth (GT)
+            </p>
+            <p style="margin:0;"><b>Intent:</b> Search for or insert an image.</p>
+            <p style="margin:0;"><b>Preference:</b> Use the "/image" command to insert a local image and use keyboard input to add a location identifier to the image.</p>
+            <p style="margin:0;"><b>Proactive-Help Decision:</b> True</p>
+          </div>
+
+          <!-- 右：模型输出 -->
+          <div style="
+            flex:1;
+            height:240px;  /* ✅ 固定高度，与左边一致 */
+            overflow-y:auto;
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+            scroll-behavior:smooth;
+            padding-right:6px;
+          ">
+
+            <!-- 模型卡片 -->
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-5</p>
+              <p style="margin:0;"><b>Intent:</b> Add images via local upload and create place entries within a travel plan editor.</p>
+              <p style="margin:0;"><b>Preference:</b> They work step-by-step, using slash commands and mouse clicks to insert images from local files and add brief text entries.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-4o</p>
+              <p style="margin:0;"><b>Intent:</b> The user is trying to insert images into a travel plan document.</p>
+              <p style="margin:0;"><b>Preference:</b> The user interacts with the interface using a combination of typing commands and clicking elements.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Claude</p>
+              <p style="margin:0;"><b>Intent:</b> The user is creating or editing a travel plan by uploading an image and adding location information.</p>
+              <p style="margin:0;"><b>Preference:</b> The user demonstrates efficient workflow habits by using keyboard shortcuts and direct text commands to quickly navigate and add content.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Gemini</p>
+              <p style="margin:0;"><b>Intent:</b> The user wants to add multiple images with corresponding text to a travel plan.</p>
+              <p style="margin:0;"><b>Preference:</b> The user prefers using slash commands to insert content into the editor.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen</p>
+              <p style="margin:0;"><b>Intent:</b> The user is building a travel plan by adding images and labeled place entries in an editor.</p>
+              <p style="margin:0;"><b>Preference:</b> The user efficiently uses slash commands to trigger image insertion and follows menu-driven upload workflows.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">DeepSeek</p>
+              <p style="margin:0;"><b>Intent:</b> The user is creating a travel plan by inserting images and adding location entries.</p>
+              <p style="margin:0;"><b>Preference:</b> The user sequentially uses text commands and GUI clicks to insert media and add text entries in the editor.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+              <p style="background:#ef4444; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen-4B-Instruct (FT)</p>
+              <p style="margin:0;"><b>Intent:</b> Insert an image into the editor and add a textual label or placeholder associated with it.</p>
+              <p style="margin:0;"><b>Preference:</b> hey open the image tool by entering the /image command, choose Image, and upload a local file by selecting it and confirming with Open. After the upload completes, they switch to the editor view and type label. They repeat the same image-insertion process again at the end of the editing session.</p>
+              <p style="margin:0;"><b>Proactive-Help Decision:</b> False</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Subtask II 图片展示 ===== -->
+        <div style="margin-top:2em;">
+          <p style="font-weight:600; text-align:center; font-size:1.1em; margin-top:1.8em;">
+            Subtask II Results Comparison (The last seven steps are used for action verification)
+          </p>
+
+          <div style="
+            display:flex;
+            gap:20px;
+            padding:20px;
+            background:#fafafa;
+            border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            max-width:100%;
+            align-items:flex-start;
+          ">
+
+            <!-- 左侧：Ground Truth -->
+            <div style="
+              width:200px;
+              height:220px;  /* ✅ 可调节高度，与上部分保持一致 */
+              flex-shrink:0;
+              background:white;
+              border-radius:10px;
+              box-shadow:0 2px 8px rgba(0,0,0,0.1);
+              padding:10px 12px;
+              display:flex;
+              flex-direction:column;
+              justify-content:flex-start;
+            ">
+              <p style="background:#1e3a8a; color:white; font-weight:bold; padding:6px 8px;
+                        border-radius:8px; margin:0 0 8px 0;">Ground Truth Actions</p>
+              <p style="margin:0;">
+                <strong>a11: </strong>click (882, 683)<br>
+                <strong>a12: </strong>click (986, 833)<br>
+                <strong>a13: </strong>click (776, 426)<br>
+                <strong>a14: </strong>click (1277, 670)<br>
+                <strong>a15: </strong>click (836, 749)<br>
+                <strong>a16: </strong>type text: place2<br>
+                <strong>a17: </strong>finish
+              </p>
+            </div>
+
+            <!-- 右侧：模型预测结果 -->
+            <div style="
+              flex:1;
+              height:220px;  /* ✅ 与左边等高 */
+              overflow-y:auto;
+              display:flex;
+              flex-direction:column;
+              gap:12px;
+              scroll-behavior:smooth;
+              padding-right:6px;
+            ">
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#3b82f6; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-5 Prediction</p>
+                <p style="margin:0;">
+                  click (690, 600)<br>
+                  finish<br>
+                  double click (865, 400)<br>
+                  click (1310, 790)<br>
+                  finish<br>
+                  finish<br>
+                  finish 
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#60a5fa; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">GPT-4o Prediction</p>
+                <p style="margin:0;">
+                  click (900, 600)<br>
+                  click (920, 950)<br>
+                  click (1250, 750)<br>
+                  click (1250, 750)<br>
+                  finish<br>
+                  finish<br>
+                  finish 
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#0284c7; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">Qwen-vl-max Prediction</p>
+                <p style="margin:0;">
+                  click (684, 527)<br>
+                  click (830, 647)<br>
+                  click (612, 332)<br>
+                  click (998, 516)<br>
+                  finish<br>
+                  finish<br>
+                  finish
+                </p>
+              </div>
+
+              <div style="background:white; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:10px;">
+                <p style="background:#ef4444; color:white; font-weight:bold; padding:6px 8px; border-radius:8px; margin:0 0 8px 0;">UITAR-7B Prediction</p>
+                <p style="margin:0;">
+                  right click (1087,395)<br>
+                  right click (1087,395)<br>
+                  click (788,677)<br>
+                  click (1277,679)<br>
+                  scroll down<br>
+                  scroll down<br>
+                  scroll down
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </details>
+
+  </div>
+  
+</section>
+
+
+ <!-- appendix-prompts -->
+
+<section id="appendix-prompts" class="section" style="margin-top:2em; padding-top:0; padding-bottom:3em;">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered" style="margin-bottom:1em;">
+      Appendix: More Prompt Examples
+    </h2>
+
+    <!-- LLM_val_prompt -->
+    <h3 style="font-weight:600; font-size:1.1em; margin-top:1em;">
+      <code>Subtask I: LLM-based Validation</code>
+    </h3>
+    <div style="
+      background:#f8f9fa;
+      border-radius:10px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.08);
+      padding:16px;
+      overflow-x:auto;
+      margin-top:0.5em;
+    ">
+      <pre style="white-space:pre; font-size:0.85em; line-height:1.4em; margin:0; font-family:Menlo, Consolas, monospace;">
+You are a GUI Behavior Analysis evaluation-only judge. Output ONE JSON object and nothing else.
+Do NOT reveal chain-of-thought. Do NOT invent facts or use external knowledge. Do NOT add text outside JSON.
+
+[GOLD_INTENT]   // one sentence
+{GOLD_INTENT_DESCRIPTION}
+
+[PRED_INTENT]   // one sentence
+{PRED_INTENT_DESCRIPTION}
+
+[JUDGMENT SCOPE]
+- Judge ONLY whether GOLD_INTENT and PRED_INTENT express the SAME goal.
+- Only the semantic goal expressed by the two sentences. Ignore wording style, synonyms, and implementation details.
+
+[DECISION RULES]
+- Output "match" ∈ {1, 0}.
+  - 1 (correct): goals align in object + operation + scope; no broadening/narrowing; differences are paraphrase only.
+  - 0 (incorrect): in all other cases, e.g.:
+    * scope/granularity mismatch (one contains the other; missing/extra key sub-goal or constraint);
+    * different or conflicting objects/operations;
+    * upstream vs downstream stage mismatch (e.g., find/locate vs purchase/submit/confirm);
+    * negation/contrast flips the goal (e.g., cancel vs submit);
+    * sentence is empty;
+
+[CONSTRAINTS]
+- Do not infer unstated entities/steps/constraints from world knowledge.
+- Do not output any evidence list; grounding is internal-only.
+- If a sentence bundles multiple sub-goals and the other states one of them → usually 0
+
+[STRICT OUTPUT JSON ONLY]
+{
+  "match": 1 | 0,                  // 1=correct (same goal), 0=incorrect
+  "reason": "<=20 chars; only claims supported by cited actions>"
+}
+
+[VALIDATION]
+- Do not output code fences or extra text. Only the JSON object above.
+      </pre>
+    </div>
+
+    <!-- win_event_prompt -->
+    <h3 style="font-weight:600; font-size:1.1em; margin-top:2em;">
+      <code>Subtask II: Preference-Conditioned Execution Prompt</code> (Windows)
+    </h3>
+    <div style="
+      background:#f8f9fa;
+      border-radius:10px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.08);
+      padding:16px;
+      overflow-x:auto;
+      margin-top:0.5em;
+    ">
+      <pre style="white-space:pre; font-size:0.85em; line-height:1.4em; margin:0; font-family:Menlo, Consolas, monospace;">
+You are a GUI action prediction assistant for Desktop (Windows).
+You are given user action history, intention and preference, with a screenshot.
+You need to predict exactly ONE next user action to perform ON THIS SCREEN.
+- Metadata Description: <br>
+  [History_JSONL]: history of user's actions<br>
+  [Intention]: user's intention of whole task<br>
+  [Preference]: user's preference of whole task
+
+Output Format
+Thought: ...
+Action: ...
+
+Action Space:
+click(point='<point>x1 y1</point>')
+left_double(point='<point>x1 y1</point>')
+right_single(point='<point>x1 y1</point>')
+drag(start_point='<point>x1 y1</point>', end_point='<point>x2 y2</point>')
+hotkey(key='ctrl c')  # split keys with a space, lowercase, ≤4 keys
+type(content='xxx')   # escape \', \" and \n; submit with trailing \n
+scroll(point='<point>x1 y1</point>', direction='down or up or right or left')
+wait()                # sleep 5s and take a screenshot to check for any changes.
+finished(content='xxx')  # escape \', \" and \n
+
+Note
+- Use {language} in Thought.
+- Write a small plan and finally summarize your next action (with its target element) in ONE sentence in Thought.
+- Prioritize actions that align with the user's preferences whenever possible.
+- If the input history operation element is null, it means the element was not found at that time. The history element description may be inaccurate sometimes.
+      </pre>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            The website template credit to <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>,
+            licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
